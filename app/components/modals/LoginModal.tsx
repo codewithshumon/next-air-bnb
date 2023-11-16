@@ -40,9 +40,10 @@ const LoginModal = () => {
       setIsLoading(false);
 
       if (callback?.ok) {
-        toast.success("Logged In");
-        router.refresh;
-        loginModal.onClose;
+        toast.success("Logged In", { duration: 1000 });
+
+        router.refresh();
+        loginModal.onClose();
       }
 
       if (callback?.error) {

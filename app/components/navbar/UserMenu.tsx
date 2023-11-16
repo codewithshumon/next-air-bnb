@@ -16,6 +16,20 @@ const UserMenu = () => {
     setIsOpen((currentValue) => !currentValue);
   }, []);
 
+  const openLoginModal = () => {
+    // Close the dropdown when the login modal is opened
+    toggleOpen();
+    // Open the login modal
+    loginModal.onOpen();
+  };
+
+  const openRegisterModal = () => {
+    // Close the dropdown when the register modal is opened
+    toggleOpen();
+    // Open the register modal
+    registerModal.onOpen();
+  };
+
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
@@ -39,8 +53,8 @@ const UserMenu = () => {
         <div className="absolute rounded-xl shadow-md w-[40vw] md:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm">
           <div className="flex flex-col cursor-pointer">
             <div className="">
-              <MenuItem onClick={loginModal.onOpen} label="Log In" />
-              <MenuItem onClick={registerModal.onOpen} label="Sign Up" />
+              <MenuItem onClick={openLoginModal} label="Log In" />
+              <MenuItem onClick={openRegisterModal} label="Sign Up" />
             </div>
           </div>
         </div>
