@@ -25,7 +25,14 @@ export default async function getCurrentUser() {
       return null;
     }
 
-    return currentUser;
+    //Only plain objects cn be passed to Client Components from Server Components. Date objects are not supported
+    //if see above error  using only "return currentUser;" then use
+    return {
+      ...currentUser,
+      createdAt: currentUser.createdAt.toISOString(),
+      updatedAt: currentUser.updatedAt.toISOString(),
+      emailVerified: currentUser.emailVerified?.toISOString() || null,
+    };
   } catch (error: any) {
     return null;
   }
