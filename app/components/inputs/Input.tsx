@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import { BiDollar } from "react-icons/bi";
 
@@ -24,6 +26,13 @@ const Input: React.FC<InputProps> = ({
   register,
   errors,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
   return (
     <div className="w-full relative">
       {formatPrice && (
@@ -37,13 +46,27 @@ const Input: React.FC<InputProps> = ({
         disabled={disabled}
         {...register(id, { required })}
         placeholder=" "
-        type={type}
+        type={showPassword ? "text" : type}
+        value={inputValue}
+        onChange={handleInputChange}
         className={`peer w-full p-4 pt-6 font-light bg-white border-2 outline-none transition disabled:opacity-60 disabled:cursor-not-allowed rounded-md
         ${formatPrice ? "pl-9" : "pl-4"}
         ${errors[id] ? "border-rose-500" : "border-neutral-300"}
         ${errors[id] ? "focus:border-rose-500" : "focus:border-neutral-300"}
         `}
       />
+      {type === "password" && inputValue.length > 0 && (
+        <div className="flex items-center">
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="text-neutral-700 bg-white absolute w-10 h-10 top-5 right-0 pl-3 mr-2 cursor-pointer"
+          >
+            {showPassword ? <IoIosEyeOff size={20} /> : <IoIosEye size={20} />}
+          </button>
+        </div>
+      )}
+
       <label
         className={`absolute text-md duration-150 transform -translate-y-3 top-5 z-10 origin-[0]
         ${formatPrice ? "left-9" : "left-4"}

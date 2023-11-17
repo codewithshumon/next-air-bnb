@@ -55,6 +55,7 @@ const RegisterModal = () => {
         disabled={isLoading}
         id="name"
         label="Name"
+        type="text"
         register={register}
         errors={errors}
         required
@@ -63,6 +64,7 @@ const RegisterModal = () => {
         disabled={isLoading}
         id="email"
         label="Email"
+        type="text"
         register={register}
         errors={errors}
         required
@@ -71,6 +73,7 @@ const RegisterModal = () => {
         disabled={isLoading}
         id="password"
         label="Password"
+        type="password"
         register={register}
         errors={errors}
         required
