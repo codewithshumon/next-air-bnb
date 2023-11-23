@@ -47,9 +47,13 @@ export const authOptions: AuthOptions = {
 
         if (!isCurrectPassword) {
           throw new Error("Invalid user credential!");
+        } else {
+          const { hashedPassword, ...rest } = user;
+
+          return rest;
         }
 
-        return user;
+        return null;
       },
     }),
   ],
