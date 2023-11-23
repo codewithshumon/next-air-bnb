@@ -28,24 +28,25 @@ model User {
 
 
 model Account {
-  //modify Account Modal folloed by Next-Auth.com Docs
-  // https://next-auth.js.org/v3/adapters/prisma"
+  //modify Account Modal by www.auth.com Docs except "session_state"
+  //https://authjs.dev/reference/adapter/prisma"
   
   id String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @db.ObjectId
-  providerType String
-  providerId String
+  type String
+  provider String
   providerAccountId String
-  refreshToken String? @db.String
-  accessToken String? @db.String
-  accessTokenExpires DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  refresh_token String? @db.String
+  access_token String? @db.String
+  expires_at Int?
+  token_type String?
+  scope String?
+  id_token String?  @db.String
 
 //here mode User.id is puting in Modal Reservation.userId 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([providerType, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 
