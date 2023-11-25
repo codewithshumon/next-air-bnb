@@ -2,7 +2,7 @@
 
 import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "../Avatar";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import MenuItem from "./MenuItem";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useLoginModal from "@/app/hooks/useLoginModal";
@@ -17,6 +17,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const [isOpen, setIsOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const toggleOpen = useCallback(() => {
     setIsOpen((currentValue) => !currentValue);
@@ -35,6 +36,31 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
     // Open the register modal
     registerModal.onOpen();
   };
+
+  //fixing UserMenu Modal closing by key escape and clicking outside of the div documents
+  useEffect(() => {
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        toggleOpen();
+      }
+    };
+
+    const handleOverlayClick = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        console.log("handleOverlayClick");
+
+        toggleOpen();
+      }
+    };
+
+    document.addEventListener("click", handleOverlayClick);
+    document.addEventListener("keydown", handleEscapeKey);
+
+    return () => {
+      document.removeEventListener("click", handleOverlayClick);
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [isOpen, toggleOpen]);
 
   return (
     <div className="relative z-50">
@@ -56,7 +82,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
         </div>
       </div>
       {isOpen && (
-        <div className="absolute rounded-xl shadow-md w-[40vw] md:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm">
+        <div
+          ref={modalRef}
+          className="absolute rounded-xl shadow-md w-[40vw] md:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm"
+        >
           <div className="flex flex-col cursor-pointer">
             {currentUser ? (
               <div className="">
