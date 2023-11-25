@@ -200,6 +200,10 @@ const Categories = () => {
     return null;
   }
 
+  // const isEnd =
+  //   carousel.current?.scrollLeft! + carousel.current?.offsetWidth! >=
+  //   maxScrollWidth.current;
+
   // Calculate the index range for the current page
   const movePrev = () => {
     if (currentIndex > 0) {
@@ -208,30 +212,39 @@ const Categories = () => {
     }
   };
 
+  // const moveNext = () => {
+  //   if (!isEnd) {
+  //     setCurrentIndex((prevState) => prevState + 1);
+  //   }
+  // };
+
   const moveNext = () => {
     setCurrentIndex((prevState) => {
       const newIndex = prevState + 1;
-      const isEnd =
-        carousel.current?.scrollLeft! >=
-        carousel.current?.scrollWidth! - carousel.current?.offsetWidth!;
 
+      const isEnd =
+        carousel.current?.scrollLeft! + carousel.current?.offsetWidth! >=
+        maxScrollWidth.current;
       setNotLastIndex(!isEnd);
 
-      return isEnd ? prevState : newIndex;
+      return newIndex;
     });
   };
 
   return (
     <Container>
-      <div className="pt-4 flex w-full gap-4 flex-row items-center justify-between overflow-x-hidden relative">
+      <div className="py-3 px-2 bg-transparent flex h-full w-full flex-row items-center justify-between overflow-x-hidden relative">
         {currentIndex > 0 && (
-          <button
-            onClick={movePrev}
-            className="p-1 mr-[16px] rounded-full shadow bg-rose-500/80 text-gray-800 hover:bg-rose-500"
-          >
-            <IoChevronBack size={20} />
-          </button>
+          <div className="absolute left-0 rounded-full z-10 h-full flex items-center justify-center pr-4 bg-white/60">
+            <button
+              onClick={movePrev}
+              className="p-1 hover:shadow-2xl shadow-white/50  border-black/30 border-2 rounded-full  text-gray-800 hover:border-black "
+            >
+              <IoChevronBack size={20} />
+            </button>
+          </div>
         )}
+
         <div
           className="flex relative gap-1 overflow-hidden scroll-smooth snap-x snap-mandatory touch-pan-x z-0 transition-transform duration-500 ease-in-out"
           ref={carousel}
@@ -246,9 +259,14 @@ const Categories = () => {
           ))}
         </div>
         {notLastIndex && (
-          <button onClick={moveNext} className="text-gray-500">
-            <IoChevronForward size={20} />
-          </button>
+          <div className="absolute right-0 rounded-full z-10 h-full flex items-center justify-center pl-4 bg-white/60">
+            <button
+              onClick={moveNext}
+              className="p-1 hover:shadow-2xl shadow-white/50  border-black/30 border-2 rounded-full  text-gray-800 hover:border-black "
+            >
+              <IoChevronForward size={20} />
+            </button>
+          </div>
         )}
       </div>
     </Container>
