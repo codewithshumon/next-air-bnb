@@ -51,8 +51,6 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
     const handleOverlayClick = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        console.log("handleOverlayClick");
-
         toggleOpen();
       }
     };
