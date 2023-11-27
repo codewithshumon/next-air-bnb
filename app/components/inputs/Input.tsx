@@ -14,6 +14,7 @@ interface InputProps {
   required?: boolean;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
+  className?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -25,6 +26,7 @@ const Input: React.FC<InputProps> = ({
   required,
   register,
   errors,
+  className,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -34,7 +36,7 @@ const Input: React.FC<InputProps> = ({
   };
 
   return (
-    <div className="w-full relative">
+    <div className={`w-full relative ${className || ""}`}>
       {formatPrice && (
         <BiDollar
           size={24}
@@ -50,11 +52,13 @@ const Input: React.FC<InputProps> = ({
         value={inputValue}
         onChange={handleInputChange}
         className={`peer w-full p-4 pt-6 font-light bg-white border-2 outline-none transition disabled:opacity-60 disabled:cursor-not-allowed rounded-md
+        ${id === "description" ? "pb-20" : ""}
         ${formatPrice ? "pl-9" : "pl-4"}
         ${errors[id] ? "border-rose-500" : "border-neutral-300"}
         ${errors[id] ? "focus:border-rose-500" : "focus:border-neutral-300"}
         `}
       />
+
       {type === "password" && inputValue.length > 0 && (
         <div className="flex items-center">
           <button
