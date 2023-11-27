@@ -44,9 +44,9 @@ const RentModal = () => {
       roomCount: 1,
       bathroomCount: 1,
       imageSrc: "",
-      price: 1,
+      price: "00",
       title: "",
-      discription: "",
+      description: "",
     },
   });
 
@@ -206,6 +206,27 @@ const RentModal = () => {
           register={register}
           errors={errors}
           className="mb-5"
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.PRICE) {
+    bodyConetent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Now, set your price"
+          subtitle="How much do you charge per night?"
+        />
+        <Input
+          required
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          id="price"
+          label="Price"
+          formatPrice={true}
+          type="number"
         />
       </div>
     );
