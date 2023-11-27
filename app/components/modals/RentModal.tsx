@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
+import dynamic from "next/dynamic";
 
 import Modal from "./Modal";
 import useRentModal from "@/app/hooks/useRentModal";
@@ -47,6 +48,12 @@ const RentModal = () => {
 
   const category = watch("category");
   const location = watch("location");
+
+  const Map = useMemo(
+    () => dynamic(() => import("../Map"), { ssr: false }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [location]
+  );
 
   //react setValue hook does set the value but it does not rerender the page
   //so we need to set a custome value
@@ -115,6 +122,9 @@ const RentModal = () => {
           value={location}
           onChange={(value) => setCustomValue("location", value)}
         />
+        {/* importing Map component by dynamic way to make sure that
+        the Map component in Server side work the react-leaflet & leaflet */}
+        <Map center={location?.latlng} />
       </div>
     );
   }
