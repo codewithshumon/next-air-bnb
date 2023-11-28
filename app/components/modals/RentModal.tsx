@@ -128,28 +128,34 @@ const RentModal = () => {
 
   //body content
   //body content
-  let bodyConetent = (
-    <div className="flex flex-col gap-8">
-      <Heading
-        title="Which of these best describes your place?"
-        subtitle="Pick a category"
-      />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto">
-        {categories.map((item) => (
-          <div key={item.label} className="col-span-1">
-            <CagetoryInput
-              onClick={(category) => setCustomValue("category", category)}
-              selected={category === item.label}
-              label={item.label}
-              icon={item.icon}
-            />
-          </div>
-        ))}
+  let bodyConetent = <div></div>;
+  if (step === STEPS.CATEGORY && register("category", { required: true })) {
+    bodyConetent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Which of these best describes your place?"
+          subtitle="Pick a category"
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto">
+          {categories.map((item) => (
+            <div key={item.label} className="col-span-1">
+              <CagetoryInput
+                onClick={(category) => setCustomValue("category", category)}
+                selected={category === item.label}
+                label={item.label}
+                icon={item.icon}
+              />
+            </div>
+          ))}
+        </div>
+        {errors.category && (
+          <span className="text-red-700">Please select a category</span>
+        )}
       </div>
-    </div>
-  );
+    );
+  }
 
-  if (step === STEPS.LOCATION) {
+  if (step === STEPS.LOCATION && register("location", { required: true })) {
     bodyConetent = (
       <div className="flex flex-col gap-8">
         <Heading
@@ -163,6 +169,9 @@ const RentModal = () => {
         {/* importing Map component by dynamic way to make sure that
         the Map component in Server side work the react-leaflet & leaflet */}
         <Map center={location?.latlng} />
+        {errors.location && (
+          <span className="text-red-700">Please select your country</span>
+        )}
       </div>
     );
   }
@@ -198,7 +207,7 @@ const RentModal = () => {
     );
   }
 
-  if (step === STEPS.IMAGES) {
+  if (step === STEPS.IMAGES && register("imageSrc", { required: true })) {
     bodyConetent = (
       <div className="flex flex-col gap-8">
         <Heading
@@ -209,6 +218,11 @@ const RentModal = () => {
           value={imageSrc}
           onChange={(value) => setCustomValue("imageSrc", value)}
         />
+        {errors.imageSrc && (
+          <span className="text-red-700">
+            Please upload your property photos
+          </span>
+        )}
       </div>
     );
   }
@@ -243,7 +257,7 @@ const RentModal = () => {
     );
   }
 
-  if (step === STEPS.PRICE) {
+  if (step === STEPS.PRICE && register("price", { required: true })) {
     bodyConetent = (
       <div className="flex flex-col gap-8">
         <Heading
@@ -260,6 +274,9 @@ const RentModal = () => {
           formatPrice={true}
           type="number"
         />
+        {errors.price && (
+          <span className="text-red-700">Please set price per night</span>
+        )}
       </div>
     );
   }
