@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -32,13 +32,17 @@ const RentModal = () => {
 
   const [step, setStep] = useState(STEPS.CATEGORY);
   const [isLoading, setIsLoading] = useState(false);
+  const [categoryDirty, setCategoryDirty] = useState(false);
+  const [locationDirty, setLocationDirty] = useState(false);
+  const [imageSrcDirty, setImageSrcDirty] = useState(false);
+  const [priceDirty, setPriceDirty] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
+    formState: { errors, dirtyFields },
     reset,
   } = useForm<FieldValues>({
     defaultValues: {
@@ -48,7 +52,7 @@ const RentModal = () => {
       roomCount: 1,
       bathroomCount: 1,
       imageSrc: "",
-      price: "00",
+      price: 0,
       title: "",
       description: "",
     },
@@ -78,7 +82,16 @@ const RentModal = () => {
   };
 
   const onBack = () => {
-    setStep((value) => value - 1);
+    if (
+      (step === STEPS.LOCATION && locationDirty) ||
+      step === STEPS.INFO ||
+      (step === STEPS.IMAGES && imageSrcDirty) ||
+      step === STEPS.DISCRIPTION ||
+      (step === STEPS.PRICE && priceDirty)
+    ) {
+      setStep((value) => value - 1);
+    }
+    return;
   };
   const onNext = () => {
     setStep((value) => value + 1);
@@ -109,6 +122,28 @@ const RentModal = () => {
         setIsLoading(false);
       });
   };
+
+  useEffect(() => {
+    console.log("useEffect");
+
+    if (dirtyFields.category) {
+      setCategoryDirty(true);
+    }
+    if (dirtyFields.location) {
+      setLocationDirty(true);
+    }
+    if (dirtyFields.imageSrc) {
+      setImageSrcDirty(true);
+    }
+    if (dirtyFields.price) {
+      setPriceDirty(true);
+    }
+  }, [
+    dirtyFields.category,
+    dirtyFields.location,
+    dirtyFields.imageSrc,
+    dirtyFields.price,
+  ]);
 
   const actionLabel = useMemo(() => {
     if (step === STEPS.PRICE) {
@@ -266,7 +301,6 @@ const RentModal = () => {
         />
         <Input
           required
-          disabled={isLoading}
           register={register}
           errors={errors}
           id="price"
@@ -284,6 +318,7 @@ const RentModal = () => {
   return (
     <div>
       <Modal
+        disabled={isLoading}
         isOpen={rentModal.isOpen}
         onClose={rentModal.onClose}
         onSubmit={handleSubmit(onSubmit)}

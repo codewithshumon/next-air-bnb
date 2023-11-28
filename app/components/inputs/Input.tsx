@@ -39,8 +39,8 @@ const Input: React.FC<InputProps> = ({
     <div className={`w-full relative ${className || ""}`}>
       {formatPrice && (
         <BiDollar
-          size={24}
-          className="text-neutral-700 absolute mt-5 top-5 left-5 mr-4"
+          size={27}
+          className="text-neutral-700 absolute mt-7 top-5 left-5 mr-4"
         />
       )}
       <input
@@ -53,7 +53,7 @@ const Input: React.FC<InputProps> = ({
         onChange={handleInputChange}
         className={`peer w-full p-4 pt-6 font-light bg-white border-2 outline-none transition disabled:opacity-60 disabled:cursor-not-allowed rounded-md
         ${id === "description" ? "pb-20" : ""}
-        ${formatPrice ? "pl-12  pt-10 " : "pl-4"}
+        ${formatPrice ? "pl-12 pt-12 pb-6 text-lg font-semibold" : "pl-4"}
         ${errors[id] ? "border-rose-500" : "border-neutral-300"}
         ${errors[id] ? "focus:border-rose-500" : "focus:border-neutral-300"}
         `}
@@ -73,7 +73,7 @@ const Input: React.FC<InputProps> = ({
 
       <label
         className={`absolute text-md duration-150 transform -translate-y-3 top-4 z-10 origin-[0]
-        ${formatPrice ? "left-9 text-lg" : "left-4"}
+        ${formatPrice ? "left-9 text-lg mb-5" : "left-4"}
         peer-placeholder-shown:scale-100
         peer-placeholder-shown:translate-y-0
         peer-focus:scale-75
