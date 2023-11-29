@@ -1,6 +1,7 @@
+"use client";
+
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import { SafeUser } from "../types";
@@ -12,14 +13,15 @@ interface UserFavoriteProps {
 }
 
 const useFavorite = ({ listingId, currentUser }: UserFavoriteProps) => {
-  const router = useRouter();
   const logingModal = useLoginModal();
 
   const hasFavorited = useMemo(() => {
     const list = currentUser?.favoriteIds || [];
 
     return list.includes(listingId);
-  }, [listingId, currentUser?.favoriteIds]);
+  }, [listingId, currentUser]);
+
+  const [isHasFavorite, setIsHasFavorite] = useState(hasFavorited);
 
   const toggleFavorite = useCallback(
     async (e: React.MouseEvent<HTMLDivElement>) => {
@@ -31,30 +33,41 @@ const useFavorite = ({ listingId, currentUser }: UserFavoriteProps) => {
 
       try {
         let request;
-        if (hasFavorited) {
+        if (isHasFavorite) {
           request = () => {
             axios.delete(`/api/favorites/${listingId}`);
+            setIsHasFavorite(!isHasFavorite);
+            toast.error("Removed from favorites", {
+              style: {
+                border: "1px solid black",
+              },
+              position: "top-right",
+              duration: 1000,
+            });
           };
-          router.refresh();
-          toast.success("Removed");
         } else {
           request = () => {
             axios.post(`/api/favorites/${listingId}`);
+            setIsHasFavorite(!isHasFavorite);
+            toast.success("Saved to favorites", {
+              style: {
+                border: "1px solid black",
+              },
+              position: "top-right",
+              duration: 1000,
+            });
           };
-          router.refresh();
-          toast.success("Saved");
         }
 
         await request();
-        router.refresh();
       } catch (error: any) {
         toast.error("Something went wrong");
       }
     },
-    [currentUser, hasFavorited, listingId, logingModal, router]
+    [currentUser, isHasFavorite, listingId, logingModal]
   );
 
-  return { hasFavorited, toggleFavorite };
+  return { isHasFavorite, toggleFavorite };
 };
 
 export default useFavorite;

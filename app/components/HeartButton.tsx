@@ -13,7 +13,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   listingId,
   currentUser,
 }) => {
-  const { hasFavorited, toggleFavorite } = useFavorite({
+  const { isHasFavorite, toggleFavorite } = useFavorite({
     listingId,
     currentUser,
   });
@@ -23,13 +23,13 @@ const HeartButton: React.FC<HeartButtonProps> = ({
       <AiFillHeart
         size={28}
         className={`absolute -top-[2px] -right-[2px] ${
-          hasFavorited ? "fill-rose-600" : " fill-black/25"
+          isHasFavorite ? "fill-rose-600" : " fill-black/25"
         }`}
       />
       <AiOutlineHeart
         size={28}
         className={`absolute -top-[2px] -right-[2px] fill-white ${
-          hasFavorited ? "hover:fill-white/70" : "hover:fill-rose-500"
+          isHasFavorite ? "hover:fill-white/70" : "hover:fill-rose-500"
         } transition`}
       />
     </div>
