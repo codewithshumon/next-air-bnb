@@ -1,5 +1,4 @@
 import { Listing, User } from "@prisma/client";
-import { type } from "os";
 
 export type SafeUser = Omit<
   User,
