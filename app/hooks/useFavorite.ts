@@ -37,7 +37,7 @@ const useFavorite = ({ listingId, currentUser }: UserFavoriteProps) => {
           position: "bottom-left",
           duration: 1500,
           style: {
-            border: "2px solid red",
+            border: "3px solid red",
           },
         });
 
@@ -63,7 +63,7 @@ const useFavorite = ({ listingId, currentUser }: UserFavoriteProps) => {
             toast.error("Removed from favorites", {
               id: toastId,
               style: {
-                border: "1px solid black",
+                border: "2px solid red",
               },
               position: "top-right",
               duration: 1500,
@@ -78,7 +78,7 @@ const useFavorite = ({ listingId, currentUser }: UserFavoriteProps) => {
             toast.success("Saved to favorites", {
               id: toastId,
               style: {
-                border: "1px solid black",
+                border: "2px solid green",
               },
               position: "top-right",
               duration: 1500,
@@ -94,7 +94,7 @@ const useFavorite = ({ listingId, currentUser }: UserFavoriteProps) => {
           position: "bottom-left",
           duration: 1500,
           style: {
-            border: "2px solid red",
+            border: "3px solid red",
           },
         });
       } finally {
