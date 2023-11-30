@@ -14,12 +14,12 @@ interface UserFavoriteProps {
 
 const useFavorite = ({ listingId, currentUser }: UserFavoriteProps) => {
   const logingModal = useLoginModal();
+  const [isLoading, setIsLoading] = useState(false);
 
   const hasFavorited = useMemo(() => {
     const list = currentUser?.favoriteIds || [];
-
     return list.includes(listingId);
-  }, [listingId, currentUser]);
+  }, [listingId, currentUser?.favoriteIds]);
 
   const [isHasFavorite, setIsHasFavorite] = useState(hasFavorited);
 
@@ -31,40 +31,77 @@ const useFavorite = ({ listingId, currentUser }: UserFavoriteProps) => {
         return logingModal.onOpen();
       }
 
+      if (isLoading) {
+        //showing error notification
+        toast.error("An error occurred. Please try again later.", {
+          position: "bottom-left",
+          duration: 1500,
+          style: {
+            border: "2px solid red",
+          },
+        });
+
+        return;
+      }
+
       try {
-        let request;
+        setIsLoading(true);
+        const toastId = toast.loading("Loading...", {
+          style: {
+            border: "1px solid black",
+          },
+          position: "top-right",
+        });
+
+        let request: () => any;
         if (isHasFavorite) {
-          request = () => {
-            axios.delete(`/api/favorites/${listingId}`);
+          request = async () => {
+            await axios.delete(`/api/favorites/${listingId}`);
             setIsHasFavorite(!isHasFavorite);
+
+            //showing error notification
             toast.error("Removed from favorites", {
+              id: toastId,
               style: {
                 border: "1px solid black",
               },
               position: "top-right",
-              duration: 1000,
+              duration: 1500,
             });
           };
         } else {
-          request = () => {
-            axios.post(`/api/favorites/${listingId}`);
+          request = async () => {
+            await axios.post(`/api/favorites/${listingId}`);
             setIsHasFavorite(!isHasFavorite);
+
+            //showing success notification
             toast.success("Saved to favorites", {
+              id: toastId,
               style: {
                 border: "1px solid black",
               },
               position: "top-right",
-              duration: 1000,
+              duration: 1500,
             });
           };
         }
 
         await request();
+        setIsLoading(false);
       } catch (error: any) {
-        toast.error("Something went wrong");
+        // Showing error notification
+        toast.error("Something went wrong", {
+          position: "bottom-left",
+          duration: 1500,
+          style: {
+            border: "2px solid red",
+          },
+        });
+      } finally {
+        setIsLoading(false);
       }
     },
-    [currentUser, isHasFavorite, listingId, logingModal]
+    [currentUser, isHasFavorite, listingId, logingModal, isLoading]
   );
 
   return { isHasFavorite, toggleFavorite };
