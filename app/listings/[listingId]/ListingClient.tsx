@@ -47,7 +47,8 @@ const ListingClient: React.FC<ListingClientProps> = ({
         end: new Date(reservation.endDate),
       });
 
-      dates: [...dates, ...range];
+      // Corrected: Use spread operator to update the dates array
+      dates = [...dates, ...range];
     });
 
     return dates;
