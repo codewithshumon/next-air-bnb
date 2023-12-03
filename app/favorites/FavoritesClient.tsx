@@ -28,14 +28,15 @@ const FavoritesClient: React.FC<FavoritesClientProps> = ({
         title="Favorites"
         subtitle="List of places you have favorited!"
       />
-      <div className="mt-1 w-fit font-semibold flex flex-row gap-2">
-        <div className="group relative flex items-center cursor-pointer">
+      <div className="mt-1 w-fit font-semibold">
+        <div className="group relative flex flex-row items-center cursor-pointer">
           <RiRefreshLine
             size={30}
             className="text-gray-800"
             onClick={() => router.refresh()}
           />
-          <div className="absolute hidden group-hover:block w-[125px] bg-gray-800 text-white text-sm p-2 rounded-full left-[105%]">
+          <div className="toottip-text hidden group-hover:block"></div>
+          <div className="absolute hidden group-hover:block w-[125px] bg-gray-800 text-white text-sm p-2 rounded-lg left-[150%]">
             Refresh favorites
           </div>
         </div>
