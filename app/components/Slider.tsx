@@ -39,8 +39,13 @@ const Slider: React.FC<SliderProps> = ({
     setCurrentIndex(newIndex);
   };
 
-  const goToSlide = (slideIndex: number) => {
+  const goToSlide = (
+    slideIndex: number,
+    e: React.MouseEvent<HTMLDivElement>
+  ) => {
+    e.stopPropagation();
     setCurrentIndex(slideIndex);
+    setClickedDot(slideIndex);
   };
 
   const getVisibleDotIndexes = () => {
@@ -59,7 +64,7 @@ const Slider: React.FC<SliderProps> = ({
 
   return (
     <div className="flex overflow-hidden items-center justify-center w-full h-full bg-black group">
-      <div className="w-full h-full bg-red-600 relative">
+      <div className="w-full h-full relative">
         <Image
           className="object-cover"
           priority
@@ -113,10 +118,7 @@ const Slider: React.FC<SliderProps> = ({
               {src.map((image, slideIndex: number) => (
                 <div
                   key={slideIndex}
-                  onClick={() => {
-                    goToSlide(slideIndex);
-                    setClickedDot(slideIndex);
-                  }}
+                  onClick={(e) => goToSlide(slideIndex, e)}
                   className={`dot text-2xl cursor-pointer ${
                     currentIndex === slideIndex ? "active-dot" : ""
                   } ${clickedDot === slideIndex ? "clicked-dot" : ""}`}

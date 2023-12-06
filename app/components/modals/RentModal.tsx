@@ -124,8 +124,6 @@ const RentModal = () => {
   };
 
   useEffect(() => {
-    console.log("useEffect");
-
     if (dirtyFields.category) {
       setCategoryDirty(true);
     }

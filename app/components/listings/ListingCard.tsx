@@ -1,149 +1,107 @@
 "use client";
 
-import axios from "axios";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { differenceInCalendarDays, eachDayOfInterval } from "date-fns";
-import toast from "react-hot-toast";
-import { Range } from "react-date-range";
+import { format } from "date-fns";
 
+import { Listing, Reservation } from "@prisma/client";
 import { SafeUser } from "@/app/types";
-import { Listing, Reservation, User } from "@prisma/client";
+import useCountries from "@/app/hooks/useCountries";
+import HeartButton from "../HeartButton";
+import Button from "../Button";
+import Slider from "../Slider";
 
-import useLoginModal from "@/app/hooks/useLoginModal";
-import { categories } from "@/app/components/navbar/Categories";
-
-import Container from "@/app/components/Container";
-import ListingHead from "@/app/components/listings/ListingHead";
-import ListingInfo from "@/app/components/listings/ListingInfo";
-import ListingReservation from "@/app/components/listings/ListingReservation";
-
-const initialDateRange = {
-  startDate: new Date() || undefined,
-  endDate: new Date() || undefined,
-  key: "selection",
-};
-
-interface ListingClientProps {
-  reservations?: Reservation[];
-  listing: Listing & { user: User };
+interface ListingCardProps {
+  disabled?: boolean;
+  data: Listing;
+  reservation?: Reservation;
+  onAction?: (id: string) => void;
+  actionId?: string;
+  actionLabel?: string;
   currentUser?: SafeUser | null;
 }
 
-const ListingClient: React.FC<ListingClientProps> = ({
-  reservations = [],
-  listing,
+const ListingCard: React.FC<ListingCardProps> = ({
+  disabled,
+  data,
+  reservation,
+  onAction,
+  actionId = "",
+  actionLabel,
   currentUser,
 }) => {
-  const logingModal = useLoginModal();
   const router = useRouter();
+  const { getByValue } = useCountries();
 
-  const disabledDates = useMemo(() => {
-    let dates: Date[] = [];
+  const location = getByValue(data.locationValue);
 
-    reservations.forEach((reservation) => {
-      const range = eachDayOfInterval({
-        start: new Date(reservation.startDate),
-        end: new Date(reservation.endDate),
-      });
+  const handleCancel = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation;
 
-      // Corrected: Use spread operator to update the dates array
-      dates = [...dates, ...range];
-    });
-
-    return dates;
-  }, [reservations]);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(listing.price);
-  const [dateRange, setDateRange] = useState<Range>(initialDateRange);
-
-  const createReservation = useCallback(() => {
-    if (!currentUser) {
-      return logingModal.onOpen();
-    }
-
-    setIsLoading(true);
-    axios
-      .post("/api/reservations", {
-        totalPrice,
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate,
-        listingId: listing?.id,
-      })
-      .then(() => {
-        toast.success("Listing reserved!");
-        setDateRange(initialDateRange);
-
-        router.push("/trips");
-        router.refresh();
-      })
-      .catch(() => {
-        toast.error("Something went wrong");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [currentUser, logingModal, listing.id, router, totalPrice, dateRange]);
-
-  useEffect(() => {
-    if (dateRange.startDate && dateRange.endDate) {
-      const dayCount = differenceInCalendarDays(
-        dateRange.endDate,
-        dateRange.startDate
-      );
-
-      if (dayCount && listing.price) {
-        setTotalPrice(dayCount * listing.price);
-      } else {
-        setTotalPrice(listing.price);
+      if (disabled) {
+        return;
       }
-    }
-  }, [dateRange, listing.price]);
 
-  const category = useMemo(() => {
-    return categories.find((item) => {
-      return item.label === listing.category;
-    });
-  }, [listing.category]);
+      onAction?.(actionId);
+    },
+    [onAction, disabled, actionId]
+  );
+
+  const price = useMemo(() => {
+    if (reservation) {
+      return reservation.totalPrice;
+    }
+
+    return data.price;
+  }, [reservation, data.price]);
+
+  const reservationDate = useMemo(() => {
+    if (!reservation) {
+      return;
+    }
+
+    const start = new Date(reservation.startDate);
+    const end = new Date(reservation.endDate);
+
+    return `${format(start, "PP")} - ${format(end, "PP")}`;
+  }, [reservation]);
 
   return (
-    <Container>
-      <div className="max-w-screen-lg mx-auto">
-        <div className="flex flex-col gap-6">
-          <ListingHead
-            id={listing.id}
-            currentUser={currentUser}
-            title={listing.title}
-            imageSrc={listing.imageSrc[0]}
-            locationValue={listing.locationValue}
-          />
-          <div className="grid grid-cols-1 md:grid-cols-7 md:gap-4 mt-6">
-            <ListingInfo
-              user={listing.user}
-              category={category}
-              discription={listing.description}
-              roomCount={listing.roomCount}
-              guestCount={listing.guestCount}
-              bathRoomCount={listing.bathRoomCount}
-              locationValue={listing.locationValue}
-            />
-            <div className="order-first mb-10 md:order-last md:col-span-3">
-              <ListingReservation
-                price={listing.price}
-                totalPrice={totalPrice}
-                onChangeDate={(value) => setDateRange(value)}
-                dateRange={dateRange}
-                onSubmit={createReservation}
-                disabled={isLoading}
-                disabledDates={disabledDates}
-              />
-            </div>
+    <div className="col-span-1 cursor-pointer group">
+      <div
+        onClick={() => router.push(`/listings/${data.id}`)}
+        className="flex flex-col gap-2 w-full"
+      >
+        <div className="aspect-square w-full relative overflow-hidden rounded-xl">
+          <Slider alt="Property" src={data.imageSrc} pagination />
+          <div className="absolute top-3 right-3">
+            <HeartButton listingId={data.id} currentUser={currentUser} />
           </div>
         </div>
+        <div className="font-semibold text-lg">
+          {location?.region}, {location?.label}
+        </div>
+        <div className="font-light text-neutral-500">
+          {reservationDate || data.category}
+        </div>
+        <div className="flex flex-row items-center gap-1">
+          <div className="font-semibold">${price}</div>
+          {!reservation && <div className="font-light">night</div>}
+        </div>
       </div>
-    </Container>
+      {onAction && actionLabel && (
+        <div className="mt-2">
+          <Button
+            small
+            disabled={disabled}
+            label={actionLabel}
+            onClick={handleCancel}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 
-export default ListingClient;
+export default ListingCard;
