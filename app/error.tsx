@@ -9,7 +9,7 @@ interface ErrorStateProps {
 
 const ErrorState: React.FC<ErrorStateProps> = ({ error }) => {
   useEffect(() => {
-    console.log(error);
+    console.log("[APP ERROR PAGE]", error);
   }, [error]);
   return <EmptyState title="Uh ho" subtitle="Something went wrong!" />;
 };
