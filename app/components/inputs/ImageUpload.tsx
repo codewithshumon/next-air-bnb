@@ -12,16 +12,20 @@ declare global {
 const uploadPreset = "cwsxvgiy";
 
 interface ImageUploadProps {
-  onChange: (value: string) => void;
-  value: string;
+  onChange: (value: string | string[]) => void;
+  value: string | string[];
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
   const handleUpload = useCallback(
     (result: any) => {
-      onChange(result.info.secure_url);
+      // If value is a string, convert it to an array
+      const newValue = Array.isArray(value)
+        ? [...value, result.info.secure_url]
+        : [result.info.secure_url];
+      onChange(newValue);
     },
-    [onChange]
+    [onChange, value]
   );
 
   return (
@@ -29,7 +33,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
       onUpload={handleUpload}
       uploadPreset={uploadPreset}
       options={{
-        maxFiles: 3,
+        maxFiles: 10,
       }}
     >
       {({ open }) => {
@@ -55,19 +59,21 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
           >
             <TbPhotoPlus size={50} />
             <div className="font-semibold text-lg">Click to upload</div>
-            {value && (
-              <div
-                className="
-              absolute inset-0 w-full h-full"
-              >
-                <Image
-                  fill
-                  style={{ objectFit: "cover" }}
-                  src={value}
-                  alt="House"
-                />
-              </div>
-            )}
+            {Array.isArray(value) &&
+              value.map((imageUrl, index) => (
+                <div
+                  key={index}
+                  className="
+                absolute inset-0 w-full h-full"
+                >
+                  <Image
+                    fill
+                    style={{ objectFit: "cover" }}
+                    src={imageUrl}
+                    alt={`House ${index + 1}`}
+                  />
+                </div>
+              ))}
           </div>
         );
       }}

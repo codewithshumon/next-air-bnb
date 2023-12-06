@@ -64,7 +64,6 @@ const ListingClient: React.FC<ListingClientProps> = ({
     }
 
     setIsLoading(true);
-
     axios
       .post("/api/reservations", {
         totalPrice,
@@ -116,7 +115,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
             id={listing.id}
             currentUser={currentUser}
             title={listing.title}
-            imageSrc={listing.imageSrc}
+            imageSrc={listing.imageSrc[0]}
             locationValue={listing.locationValue}
           />
           <div className="grid grid-cols-1 md:grid-cols-7 md:gap-4 mt-6">
