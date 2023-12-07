@@ -125,10 +125,10 @@ const Slider: React.FC<SliderProps> = ({
                   style={{
                     fontSize:
                       currentIndex === slideIndex
-                        ? "32px"
+                        ? "24px"
                         : currentIndex + 1 === slideIndex ||
                           currentIndex - 1 === slideIndex
-                        ? "22px"
+                        ? "18px"
                         : currentIndex + 2 === slideIndex ||
                           currentIndex - 2 === slideIndex
                         ? "16px"
@@ -143,7 +143,7 @@ const Slider: React.FC<SliderProps> = ({
                   }}
                 >
                   <GoDotFill
-                    color={currentIndex === slideIndex ? "green" : "gray"}
+                    color={currentIndex === slideIndex ? "white" : "#C1C1C1"}
                   />
                 </div>
               ))}

@@ -34,3 +34,7 @@ body,
   border-right: 10px solid #1f2937;
   border-bottom: 7px solid transparent;
 }
+
+.dot {
+  transition: transform 0.5s ease-in-out, font-size 0.5s ease-in-out; /* Add transition for the dots */
+}
