@@ -73,7 +73,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
         onClick={() => router.push(`/listings/${data.id}`)}
         className="flex flex-col gap-2 w-full"
       >
-        <div className="aspect-[4/3] w-[300px] relative overflow-hidden rounded-xl">
+        <div className="aspect-[4/3] w-full relative overflow-hidden rounded-xl">
           <Slider alt="Property" src={data.imageSrc} pagination />
           <div className="absolute top-3 right-3">
             <HeartButton listingId={data.id} currentUser={currentUser} />
