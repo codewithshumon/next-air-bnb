@@ -108,12 +108,13 @@ const RentModal = () => {
       .post("/api/listings", data)
       .then(() => {
         toast.success("Listing Created!");
-        router.refresh;
+        router.refresh();
 
         //after submit reset the useForm reset by react-form-hook
         reset();
         setStep(STEPS.CATEGORY);
         rentModal.onClose();
+        router.push("/properties");
       })
       .catch(() => {
         toast.error("Something went wrong.");
