@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RiRefreshLine } from "react-icons/ri";
 
@@ -9,7 +9,9 @@ import { SafeUser } from "../types";
 
 import Container from "../components/Container";
 import Heading from "../components/Heading";
-import ListingCard from "../components/listings/ListingCard";
+import Skeleton from "../components/Skeleton";
+
+const ListingCard = lazy(() => import("../components/listings/ListingCard"));
 
 interface FavoritesClientProps {
   listings: Listing[];
@@ -67,11 +69,13 @@ const FavoritesClient: React.FC<FavoritesClientProps> = ({
 
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
         {listings.map((listing) => (
-          <ListingCard
-            key={listing.id}
-            currentUser={currentUser}
-            data={listing}
-          />
+          <Suspense key={listing.id} fallback={<Skeleton isButton />}>
+            <ListingCard
+              key={listing.id}
+              currentUser={currentUser}
+              data={listing}
+            />
+          </Suspense>
         ))}
       </div>
     </Container>
