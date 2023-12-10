@@ -9,7 +9,7 @@ import { SafeUser } from "../types";
 
 import Container from "../components/Container";
 import Heading from "../components/Heading";
-import Skeleton from "../components/Skeleton";
+import ListingCardSkeleton from "../components/skeletons/ListingCardSkeleton";
 
 const ListingCard = lazy(() => import("../components/listings/ListingCard"));
 
@@ -69,7 +69,7 @@ const FavoritesClient: React.FC<FavoritesClientProps> = ({
 
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
         {listings.map((listing) => (
-          <Suspense key={listing.id} fallback={<Skeleton isButton />}>
+          <Suspense key={listing.id} fallback={<ListingCardSkeleton />}>
             <ListingCard
               key={listing.id}
               currentUser={currentUser}

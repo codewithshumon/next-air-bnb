@@ -1,7 +1,7 @@
 import Container from "../Container";
-import CategoryBox from "./CategoryBox";
+const CategoryBox = lazy(() => import("./CategoryBox"));
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense, lazy } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { MdOutlineVilla } from "react-icons/md";
 import { FaSkiing } from "react-icons/fa";
@@ -18,6 +18,7 @@ import {
   GiIsland,
   GiWindmill,
 } from "react-icons/gi";
+import CategorySkeleton from "../skeletons/CategorySkeleton";
 
 export const categories = [
   {
@@ -250,12 +251,14 @@ const Categories = () => {
           ref={carousel}
         >
           {categories.map((item) => (
-            <CategoryBox
-              key={item.label}
-              label={item.label}
-              selected={category === item.label}
-              icon={item.icon}
-            />
+            <Suspense key={item.label} fallback={<CategorySkeleton />}>
+              <CategoryBox
+                key={item.label}
+                label={item.label}
+                selected={category === item.label}
+                icon={item.icon}
+              />
+            </Suspense>
           ))}
         </div>
         {notLastIndex && (

@@ -1,8 +1,10 @@
-interface SkeletonProps {
+interface ListingCardSkeletonProps {
   isButton?: boolean;
 }
 
-const Skeleton: React.FC<SkeletonProps> = ({ isButton }) => {
+const ListingCardSkeleton: React.FC<ListingCardSkeletonProps> = ({
+  isButton,
+}) => {
   return (
     <div className="animate-pulse">
       <div className="max-w-[350px] min-h-[200px] space-y-3">
@@ -28,4 +30,4 @@ const Skeleton: React.FC<SkeletonProps> = ({ isButton }) => {
   );
 };
 
-export default Skeleton;
+export default ListingCardSkeleton;

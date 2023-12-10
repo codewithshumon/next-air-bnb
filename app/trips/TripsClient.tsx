@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useState, Suspense, lazy } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -10,7 +10,9 @@ import { SafeUser } from "../types";
 
 import Container from "../components/Container";
 import Heading from "../components/Heading";
-import ListingCard from "../components/listings/ListingCard";
+import ListingCardSkeleton from "../components/skeletons/ListingCardSkeleton";
+
+const ListingCard = lazy(() => import("../components/listings/ListingCard"));
 
 interface TripsClientProps {
   reservations: (Reservation & { listing: Listing })[];
@@ -52,16 +54,21 @@ const TripsClient: React.FC<TripsClientProps> = ({
       />
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
         {reservations.map((reservation: any) => (
-          <ListingCard
+          <Suspense
             key={reservation.id}
-            data={reservation.listing}
-            reservation={reservation}
-            actionId={reservation.id}
-            onAction={onCancle}
-            disabled={deleteId === reservation.id}
-            actionLabel="Cancel Reservation"
-            currentUser={currentUser}
-          />
+            fallback={<ListingCardSkeleton isButton />}
+          >
+            <ListingCard
+              key={reservation.id}
+              data={reservation.listing}
+              reservation={reservation}
+              actionId={reservation.id}
+              onAction={onCancle}
+              disabled={deleteId === reservation.id}
+              actionLabel="Cancel Reservation"
+              currentUser={currentUser}
+            />
+          </Suspense>
         ))}
       </div>
     </Container>

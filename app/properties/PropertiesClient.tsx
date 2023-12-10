@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useState, Suspense, lazy } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -10,7 +10,9 @@ import { SafeUser } from "../types";
 
 import Container from "../components/Container";
 import Heading from "../components/Heading";
-import ListingCard from "../components/listings/ListingCard";
+import ListingCardSkeleton from "../components/skeletons/ListingCardSkeleton";
+
+const ListingCard = lazy(() => import("../components/listings/ListingCard"));
 
 interface PropertiesClientProps {
   listings: Listing[];
@@ -49,15 +51,20 @@ const PropertiesClient: React.FC<PropertiesClientProps> = ({
       <Heading title="Properties" subtitle="Listings on your properties" />
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
         {listings.map((listing: any) => (
-          <ListingCard
+          <Suspense
             key={listing.id}
-            data={listing}
-            actionId={listing.id}
-            onAction={onCancle}
-            disabled={deleteId === listing.id}
-            actionLabel="Delete Property"
-            currentUser={currentUser}
-          />
+            fallback={<ListingCardSkeleton isButton />}
+          >
+            <ListingCard
+              key={listing.id}
+              data={listing}
+              actionId={listing.id}
+              onAction={onCancle}
+              disabled={deleteId === listing.id}
+              actionLabel="Delete Property"
+              currentUser={currentUser}
+            />
+          </Suspense>
         ))}
       </div>
     </Container>
