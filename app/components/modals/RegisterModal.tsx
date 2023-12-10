@@ -38,7 +38,10 @@ const RegisterModal = () => {
     //fetching data from api folder and sening data (name, emai, password) also closeing the model
     axios
       .post("/api/register", data)
-      .then(() => registerModal.onClose())
+      .then(() => {
+        registerModal.onClose();
+        loginModal.onOpen();
+      })
       .catch((error) => {
         console.log("register Modal", error);
 

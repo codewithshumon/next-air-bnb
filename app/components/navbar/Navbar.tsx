@@ -4,10 +4,10 @@ import Categories from "./Categories";
 import Logo from "./Logo";
 import Search from "./Search";
 import UserMenu from "./UserMenu";
-import { SafeType } from "@/app/types";
+import { SafeUser } from "@/app/types";
 
 interface NavbarProps {
-  currentUser?: SafeType | null;
+  currentUser?: SafeUser | null;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
