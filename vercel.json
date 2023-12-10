@@ -2,8 +2,34 @@
   "version": 2,
   "builds": [{ "src": "path/to/your/source", "use": "@vercel/node" }],
   "build": {
-    "hooks": {
-      "prebuild": "npx prisma generate"
+    "functions": {
+      "api/**/*.js": {
+        "runtime": "@vercel/node"
+      }
+    },
+    "config": {
+      "NODE_VERSION": "14"
+    },
+    "env": {
+      "NEXT_TELEMETRY_DISABLED": "1"
+    },
+    "commands": {
+      "build": "npm run build"
     }
-  }
+  },
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "@vercel/node"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/.*",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.js"
+    }
+  ]
 }
