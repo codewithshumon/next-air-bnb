@@ -1,11 +1,6 @@
 {
-  "builds": [{ "src": "path/to/your/source", "use": "@vercel/node" }],
   "version": 2,
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "@vercel/node"
-    }
-  },
+  "builds": [{ "src": "path/to/your/source", "use": "@vercel/node" }],
   "build": {
     "hooks": {
       "prebuild": "npx prisma generate"
