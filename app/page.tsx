@@ -1,3 +1,5 @@
+"force-dynamic";
+
 import getCurrentUser from "./actions/getCurrentUser";
 import getListings, { GetListingParamsProps } from "./actions/getListings";
 
