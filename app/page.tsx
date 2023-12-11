@@ -1,11 +1,11 @@
-export const dynamic = "force-static";
-
 import getCurrentUser from "./actions/getCurrentUser";
 import getListings, { GetListingParamsProps } from "./actions/getListings";
 
 import PageClient from "./PageClient";
 import ClientOnly from "./components/ClientOnly";
 import EmptyState from "./components/EmptyState";
+
+export const dynamic = "force-dynamic";
 
 interface HomeProps {
   searchParams: GetListingParamsProps;
